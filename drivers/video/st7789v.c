@@ -1,0 +1,212 @@
+/*
+ * ST7789V IPS LCD panel driver
+ *
+ * (C) Copyright 2018 Steward Fu <steward.fu@gmail.com>
+ *
+ */
+
+#include <common.h>
+#include <asm/gpio.h>
+#include <errno.h>
+
+#define IPS_CS  ((32 * 4) + 20) // PE20
+#define IPS_RST ((32 * 2) + 0)  // PC0
+#define IPS_CLK ((32 * 2) + 1)  // PC1
+#define IPS_SDA ((32 * 2) + 3)  // PC3
+
+static void send_spi(uint8_t type, uint8_t data)
+{
+  int bit;
+ 
+  gpio_set_value(IPS_CS, 0);
+  gpio_set_value(IPS_CLK, 0); 
+  gpio_set_value(IPS_SDA, type); 
+  udelay(10);
+  gpio_set_value(IPS_CLK, 1); 
+  udelay(10);
+  for(bit=7; bit>=0; bit--){
+    gpio_set_value(IPS_CLK, 0); 
+    gpio_set_value(IPS_SDA, (data >> bit) & 1); 
+    udelay(10);
+    gpio_set_value(IPS_CLK, 1); 
+    udelay(10);
+  }
+  gpio_set_value(IPS_CS, 1);
+}
+ 
+static void send_spi_cmd(uint8_t data)
+{
+  send_spi(0, data);
+}
+ 
+static void send_spi_data(uint8_t data)
+{
+  send_spi(1, data);
+}
+ 
+static void spi_init(void)
+{
+  gpio_set_value(IPS_RST, 0);
+  mdelay(100);  
+  gpio_set_value(IPS_RST, 1);
+  mdelay(150);
+ 
+  send_spi_cmd(0x36);
+//  send_spi_data(0xe4);
+  send_spi_data(0x00);
+
+  send_spi_cmd(0xb2); // porch
+  send_spi_data(0x0c); // back porch
+  send_spi_data(0x0c); // front porch
+  send_spi_data(0x00); // psen
+  send_spi_data(0x33);
+  send_spi_data(0x33);
+ 
+  send_spi_cmd(0xb7);
+  send_spi_data(0x35);
+/*
+  send_spi_cmd(0xb8);
+  send_spi_data(0x2f);
+  send_spi_data(0x2b);
+  send_spi_data(0x2f);
+*/
+  send_spi_cmd(0xbb);
+  send_spi_data(0x15);
+ 
+  send_spi_cmd(0xc0);
+//  send_spi_data(0x20);
+  send_spi_data(0x6e);
+
+  send_spi_cmd(0xc2);
+  send_spi_data(0x01);
+
+  send_spi_cmd(0xc3);
+  send_spi_data(0x0b);
+ 
+  send_spi_cmd(0xc4);
+  send_spi_data(0x20);
+ 
+  send_spi_cmd(0xc6);
+  send_spi_data(0x0f);
+ 
+  send_spi_cmd(0xca);
+  send_spi_data(0x0f);
+
+  send_spi_cmd(0xc8);
+  send_spi_data(0x08);
+
+  send_spi_cmd(0x55);
+  send_spi_data(0x90);
+
+  send_spi_cmd(0xd0);
+  send_spi_data(0xa4);
+  send_spi_data(0xa1);
+/*
+  send_spi_cmd(0xe8);
+  send_spi_data(0x03);
+*/
+/*
+  send_spi_cmd(0xe9);
+  send_spi_data(0x0d);
+  send_spi_data(0x12);
+  send_spi_data(0x00);
+*/
+  send_spi_cmd(0xe0);
+  send_spi_data(0xd0);
+  send_spi_data(0x00);
+  send_spi_data(0x00);
+  send_spi_data(0x08);
+  send_spi_data(0x11);
+  send_spi_data(0x1a);
+  send_spi_data(0x2b);
+  send_spi_data(0x33);
+  send_spi_data(0x42);
+  send_spi_data(0x26);
+  send_spi_data(0x12);
+  send_spi_data(0x21);
+  send_spi_data(0x2f);
+  send_spi_data(0x11);
+ 
+  send_spi_cmd(0xe1);
+  send_spi_data(0xd0);
+  send_spi_data(0x02);
+  send_spi_data(0x09);
+  send_spi_data(0x0d);
+  send_spi_data(0x0d);
+  send_spi_data(0x27);
+  send_spi_data(0x2b);
+  send_spi_data(0x33);
+  send_spi_data(0x42);
+  send_spi_data(0x17);
+  send_spi_data(0x12);
+  send_spi_data(0x11);
+  send_spi_data(0x2f);
+  send_spi_data(0x31);
+ 
+  send_spi_cmd(0x21);
+ 
+  send_spi_cmd(0xb0);
+  send_spi_data(0x11); // rgb interface
+  send_spi_data(0xc0); // 18bit
+//  send_spi_data(0x00); 
+ 
+  send_spi_cmd(0xb1);
+  send_spi_data(0x40); // de mode
+  send_spi_data(0x02); // vbp 
+  send_spi_data(0x14); // hbp
+/*
+  send_spi_cmd(0xb3);
+  send_spi_data(0x02);
+  send_spi_data(0x0f);
+  send_spi_data(0x0f);
+*/
+  send_spi_cmd(0x3a); 
+  send_spi_data(0x66); // 18bit=0x66, 16bit=0x55
+
+  send_spi_cmd(0x2b);
+  send_spi_data(0x00);
+  send_spi_data(0x00);
+  send_spi_data(0x00);
+  send_spi_data(0xef);
+ 
+  send_spi_cmd(0x2a);
+  send_spi_data(0x00);
+  send_spi_data(0x00);
+  send_spi_data(0x01);
+  send_spi_data(0x3f);
+
+  send_spi_cmd(0x11); 
+  mdelay(120);
+ 
+  send_spi_cmd(0x29);
+  send_spi_cmd(0x2c); 
+}
+
+static void need_gpio(int pin, char *name)
+{
+  int ret = gpio_request(pin, name);
+  gpio_direction_output(pin, 1);
+  gpio_set_value(pin, 1);
+}
+
+void st7789v_init(void)
+{
+  sunxi_gpio_set_cfgpin(SUNXI_GPC(0), 1);
+  sunxi_gpio_set_cfgpin(SUNXI_GPC(1), 1);
+  sunxi_gpio_set_cfgpin(SUNXI_GPC(3), 1);
+  sunxi_gpio_set_cfgpin(SUNXI_GPE(20), 1);
+  need_gpio(IPS_CS,  "ips_cs");
+  need_gpio(IPS_RST, "ips_rst");
+  need_gpio(IPS_CLK, "ips_clk");
+  need_gpio(IPS_SDA, "ips_sda");
+	spi_init();
+}
+
+void st7789v_deinit(void)
+{
+  gpio_free(IPS_CS);
+  gpio_free(IPS_RST);
+  gpio_free(IPS_CLK);
+  gpio_free(IPS_SDA);
+}
+
