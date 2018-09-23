@@ -52,50 +52,65 @@ static void spi_init(void)
   mdelay(150);
  
   send_spi_cmd(0x36);
-  send_spi_data(0xa0);
- 
+//  send_spi_data(0xe4);
+  send_spi_data(0x00);
+
   send_spi_cmd(0xb2); // porch
-  send_spi_data(10); // back porch
-  send_spi_data(38); // front porch
-  send_spi_data(0); // psen
-  send_spi_data(0xaa);
-  send_spi_data(0xaa);
+  send_spi_data(0x0c); // back porch
+  send_spi_data(0x0c); // front porch
+  send_spi_data(0x00); // psen
+  send_spi_data(0x33);
+  send_spi_data(0x33);
  
   send_spi_cmd(0xb7);
   send_spi_data(0x35);
- 
+/*
   send_spi_cmd(0xb8);
   send_spi_data(0x2f);
   send_spi_data(0x2b);
   send_spi_data(0x2f);
- 
+*/
   send_spi_cmd(0xbb);
-  send_spi_data(0x24);
+  send_spi_data(0x15);
  
   send_spi_cmd(0xc0);
-  send_spi_data(0x2C);
- 
+//  send_spi_data(0x20);
+  send_spi_data(0x6e);
+
+  send_spi_cmd(0xc2);
+  send_spi_data(0x01);
+
   send_spi_cmd(0xc3);
-  send_spi_data(0x10);
+  send_spi_data(0x0b);
  
   send_spi_cmd(0xc4);
   send_spi_data(0x20);
  
   send_spi_cmd(0xc6);
-  send_spi_data(0x11);
+  send_spi_data(0x0f);
  
+  send_spi_cmd(0xca);
+  send_spi_data(0x0f);
+
+  send_spi_cmd(0xc8);
+  send_spi_data(0x08);
+
+  send_spi_cmd(0x55);
+  send_spi_data(0x90);
+
   send_spi_cmd(0xd0);
   send_spi_data(0xa4);
   send_spi_data(0xa1);
- 
+/*
   send_spi_cmd(0xe8);
   send_spi_data(0x03);
- 
+*/
+/*
   send_spi_cmd(0xe9);
   send_spi_data(0x0d);
   send_spi_data(0x12);
   send_spi_data(0x00);
- 
+*/
   send_spi_cmd(0xe0);
   send_spi_data(0xd0);
   send_spi_data(0x00);
@@ -132,29 +147,34 @@ static void spi_init(void)
  
   send_spi_cmd(0xb0);
   send_spi_data(0x11); // rgb interface
-  send_spi_data(0x00); // 18bit
-  send_spi_data(0x00); 
+  send_spi_data(0xc0); // 18bit
+//  send_spi_data(0x00); 
  
   send_spi_cmd(0xb1);
   send_spi_data(0x40); // de mode
-  send_spi_data(4); // vbp 
-  send_spi_data(10); // hbp
- 
+  send_spi_data(0x02); // vbp 
+  send_spi_data(0x14); // hbp
+/*
+  send_spi_cmd(0xb3);
+  send_spi_data(0x02);
+  send_spi_data(0x0f);
+  send_spi_data(0x0f);
+*/
   send_spi_cmd(0x3a); 
   send_spi_data(0x66); // 18bit=0x66, 16bit=0x55
- 
-  send_spi_cmd(0x2a);
+
+  send_spi_cmd(0x2b);
   send_spi_data(0x00);
   send_spi_data(0x00);
   send_spi_data(0x00);
   send_spi_data(0xef);
  
-  send_spi_cmd(0x2b);
+  send_spi_cmd(0x2a);
   send_spi_data(0x00);
   send_spi_data(0x00);
   send_spi_data(0x01);
   send_spi_data(0x3f);
- 
+
   send_spi_cmd(0x11); 
   mdelay(120);
  

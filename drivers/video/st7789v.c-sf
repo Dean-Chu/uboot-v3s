@@ -71,17 +71,17 @@ static void spi_init(void)
   send_spi_data(0x2f);
 */
   send_spi_cmd(0xbb);
-  send_spi_data(0x15);
+  send_spi_data(0x24);
  
   send_spi_cmd(0xc0);
 //  send_spi_data(0x20);
   send_spi_data(0x6e);
-
+/*
   send_spi_cmd(0xc2);
   send_spi_data(0x01);
-
+*/
   send_spi_cmd(0xc3);
-  send_spi_data(0x0b);
+  send_spi_data(0x10);
  
   send_spi_cmd(0xc4);
   send_spi_data(0x20);
@@ -101,16 +101,17 @@ static void spi_init(void)
   send_spi_cmd(0xd0);
   send_spi_data(0xa4);
   send_spi_data(0xa1);
-/*
+
   send_spi_cmd(0xe8);
   send_spi_data(0x03);
-*/
-/*
+
+
   send_spi_cmd(0xe9);
   send_spi_data(0x0d);
   send_spi_data(0x12);
   send_spi_data(0x00);
-*/
+
+/*
   send_spi_cmd(0xe0);
   send_spi_data(0xd0);
   send_spi_data(0x0e);
@@ -142,7 +143,7 @@ static void spi_init(void)
   send_spi_data(0x15);
   send_spi_data(0x32);
   send_spi_data(0x35);
-/*
+*/
   send_spi_cmd(0xe0);
   send_spi_data(0xd0);
   send_spi_data(0x00);
@@ -174,7 +175,7 @@ static void spi_init(void)
   send_spi_data(0x11);
   send_spi_data(0x2f);
   send_spi_data(0x31);
-*/
+
   send_spi_cmd(0x21);
  
   send_spi_cmd(0xb0);
